@@ -1,0 +1,33 @@
+import {createBrowserRouter} from 'react-router-dom';
+import App from '../App.jsx';
+import Home from '../pages/Home.jsx';
+import Login from '../pages/Login.jsx';
+import ForgotPass from '../pages/ForgotPass.jsx';
+import SignUp from '../pages/SignUp.jsx';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "home",
+        element: <Home />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPass />,
+      },
+      {
+        path: "sign-up",
+        element: <SignUp />,
+      }
+    ]
+  }
+]);
+
+export default router;
