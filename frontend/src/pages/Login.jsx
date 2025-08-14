@@ -5,7 +5,8 @@ import  { useState } from 'react';
 import SummaryApi from "../common";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import { useContext } from "react";
+import Context from "../context/index.jsx";
 const Login = () => {
 
   // This state controls the visibility of the password input field
@@ -17,6 +18,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const {fetchUserDetails} = useContext(Context);
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -39,6 +41,7 @@ const Login = () => {
     if (dataApi.success) {
       toast.success(dataApi.message);
       navigate("/");
+      fetchUserDetails();
     } else {
       toast.error(dataApi.message);
     }

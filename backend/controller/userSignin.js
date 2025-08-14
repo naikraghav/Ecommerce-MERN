@@ -1,4 +1,4 @@
-const userModel = require("../models/userModel");
+const userModel = require("../models/userModel.js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); 
 
@@ -33,7 +33,7 @@ async function userSignInController(req, res) {
         _id: user._id,
         email: user.email,
       };
-      const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET, {expiresIn: '1d'});
+      const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {expiresIn: '1d'});
 
       const tokenOptions = {
         httpOnly: true,
