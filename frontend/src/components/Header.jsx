@@ -3,8 +3,31 @@ import { HiSearch } from "react-icons/hi";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import SummaryApi from "../common";
+import { setUserDetails } from "../store/userSlice";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
+  const user = useSelector((state) => state?.user?.user);
+
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    const fetchData = await fetch(SummaryApi.logout_user.url, {
+      method: SummaryApi.logout_user.method,
+      credentials: "include",
+    });
+    const data = await fetchData.json();
+    if (data.success) {
+      toast.success(data.message);
+      dispatch(setUserDetails(null));
+    } else {
+      toast.error(data.message || "Logout failed");
+    }
+  };
+
   return (
     <header className="h-16 shadow-md bg-white">
       <div className=" h-full container mx-auto flex items-center px-4 justify-between">
@@ -27,7 +50,15 @@ const Header = () => {
 
         <div className="flex items-center gap-7">
           <div className="text-3xl cursor-pointer ">
-            <FaRegCircleUser />
+            {user?.profilePic ? (
+              <img
+                src={user.profilePic}
+                alt="Profile"
+                className="w-10 h-10 rounded-full"
+              />
+            ) : (
+              <FaRegCircleUser />
+            )}
           </div>
           <div className="text-2xl cursor-pointer relative">
             <span>
@@ -39,7 +70,18 @@ const Header = () => {
           </div>
 
           <div>
-            <Link to={"/login"} className='px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700'>Login</Link>
+            {user?._id ? (
+              <button onClick={handleLogout} className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700">
+                Logout
+              </button>
+            ) : (
+              <Link
+                to={"/login"}
+                className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
