@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react';
-import SummaryApi from '../common';
+import SummaryApi from '../common/index.jsx';
 import { toast } from 'react-toastify';
 import { MdModeEdit } from "react-icons/md";
+import ChangeUserRole from '../components/ChangeUserRole.jsx';
 
 
 
 
 const AllUsers = () => {
 const [allUsers, setAllUsers] = useState([]);
+const [openUpdateRole, setOpenUpdateRole] = useState(false);
+const [updateUserDetails, setUpdateUserDetails] = useState({
+  name: "",
+  email: "",
+  role: "",
+  _id: ""
+});
 const fetchAllUsers = async () => {
   const fetchData = await fetch(SummaryApi.allUsers.url, {
     method: SummaryApi.allUsers.method,
@@ -49,7 +57,10 @@ useEffect(() => {
               <td>{el.role}</td>
               <td>{new Date(el.createdAt).toLocaleDateString()}</td>
               <td>
-                <button className='bg-green-100 p-2 rounded-full cursor-pointer hover:bg-green-500'>
+                <button className='bg-green-100 p-2 rounded-full cursor-pointer hover:bg-green-500'onClick={() => {
+                  setOpenUpdateRole(true);
+                  setUpdateUserDetails(el);
+                }}>
                   <MdModeEdit />
                 </button>
               </td>
@@ -57,6 +68,17 @@ useEffect(() => {
           ))}
         </tbody>
       </table>
+
+      {openUpdateRole && (
+        <ChangeUserRole
+          name={updateUserDetails.name}
+          email={updateUserDetails.email}
+          role={updateUserDetails.role}
+          userId={updateUserDetails._id}
+          onClose={() => setOpenUpdateRole(false)}
+          callFunc={fetchAllUsers}
+        />
+      )} 
     </div>
   )
 }
