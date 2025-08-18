@@ -37,7 +37,7 @@ useEffect(() => {
     <div className='bg-white pb-4'>
       <table className='w-full userTable'>
         <thead>
-          <tr>
+          <tr className='bg-black text-white'>
             <th>SI</th>
             <th>Name</th>
             <th>Email</th>
