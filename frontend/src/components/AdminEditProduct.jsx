@@ -1,25 +1,26 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { CgClose } from "react-icons/cg";
-import { FaCloudUploadAlt } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 import productCategory from "../helper/productCategory";
-import uploadImage from "../helper/uploadImage.jsx";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import uploadImage from "../helper/uploadImage";
 import DisplayImage from "./DisplayImage";
-import SummaryApi from "../common/index.jsx";
+import { MdDelete } from "react-icons/md";
+import SummaryApi from "../common";
 import { toast } from "react-toastify";
 
-const UploadProduct = ({ onClose, fetchdata }) => {
+const AdminEditProduct = ({ onClose, productData, fetchdata }) => {
   const [data, setData] = useState({
-    productName: "",
-    brandName: "",
-    category: "",
-    productImage: [],
-    description: "",
-    price: "",
-    sellingPrice: "",
+    ...productData,
+    productName: productData?.productName,
+    brandName: productData?.brandName,
+    category: productData?.category,
+    productImage: productData?.productImage || [],
+    description: productData?.description,
+    price: productData?.price,
+    sellingPrice: productData?.sellingPrice,
   });
-  const [fullScreenImage, setFullScreenImage] = useState("");
   const [openFullScreenImage, setOpenFullScreenImage] = useState(false);
+  const [fullScreenImage, setFullScreenImage] = useState("");
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -34,54 +35,63 @@ const UploadProduct = ({ onClose, fetchdata }) => {
 
   const handleUploadProduct = async (e) => {
     const file = e.target.files[0];
-
     const uploadImageCloudinary = await uploadImage(file);
-    setData((prev) => {
+
+    setData((preve) => {
       return {
-        ...prev,
-        productImage: [...prev.productImage, uploadImageCloudinary.url],
+        ...preve,
+        productImage: [...preve.productImage, uploadImageCloudinary.url],
       };
     });
   };
 
-  const handleDeleteProductImage = async(index) => {
+  const handleDeleteProductImage = async (index) => {
+    console.log("image index", index);
+
     const newProductImage = [...data.productImage];
     newProductImage.splice(index, 1);
-    setData((prev) => {
+
+    setData((preve) => {
       return {
-        ...prev,
+        ...preve,
         productImage: [...newProductImage],
       };
     });
   };
 
+  {
+    /**upload product */
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch(SummaryApi.uploadProduct.url, {
-      method: SummaryApi.uploadProduct.method,
+    const response = await fetch(SummaryApi.updateProduct.url, {
+      method: SummaryApi.updateProduct.method,
       credentials: "include",
       headers: {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
     const responseData = await response.json();
+
     if (responseData.success) {
       toast.success(responseData?.message);
       onClose();
       fetchdata();
     }
+
     if (responseData.error) {
       toast.error(responseData?.message);
     }
   };
+
   return (
     <div className="fixed w-full  h-full bg-slate-200 bg-opacity-35 top-0 left-0 right-0 bottom-0 flex justify-center items-center">
       <div className="bg-white p-4 rounded w-full max-w-2xl h-full max-h-[80%] overflow-hidden">
         <div className="flex justify-between items-center pb-3">
-          <h2 className="font-bold text-lg">Upload Product</h2>
+          <h2 className="font-bold text-lg">Edit Product</h2>
           <div
             className="w-fit ml-auto text-2xl hover:text-red-600 cursor-pointer"
             onClick={onClose}
@@ -164,7 +174,7 @@ const UploadProduct = ({ onClose, fetchdata }) => {
               <div className="flex items-center gap-2">
                 {data.productImage.map((el, index) => {
                   return (
-                    <div className="relative group" key={el + index}>
+                    <div className="relative group">
                       <img
                         src={el}
                         alt={el}
@@ -235,7 +245,7 @@ const UploadProduct = ({ onClose, fetchdata }) => {
           ></textarea>
 
           <button className="px-3 py-2 bg-red-600 text-white mb-10 hover:bg-red-700">
-            Upload Product
+            Update Product
           </button>
         </form>
       </div>
@@ -251,4 +261,4 @@ const UploadProduct = ({ onClose, fetchdata }) => {
   );
 };
 
-export default UploadProduct;
+export default AdminEditProduct;
