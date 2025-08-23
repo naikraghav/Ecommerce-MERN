@@ -32,17 +32,7 @@ const UploadProduct = ({ onClose, fetchdata }) => {
     });
   };
 
-  const handleUploadProduct = async (e) => {
-    const file = e.target.files[0];
 
-    const uploadImageCloudinary = await uploadImage(file);
-    setData((prev) => {
-      return {
-        ...prev,
-        productImage: [...prev.productImage, uploadImageCloudinary.url],
-      };
-    });
-  };
 
   const handleDeleteProductImage = async(index) => {
     const newProductImage = [...data.productImage];
@@ -54,6 +44,24 @@ const UploadProduct = ({ onClose, fetchdata }) => {
       };
     });
   };
+
+const handleUploadProduct = async (e) => {
+  const files = Array.from(e.target.files);   // 👈 get all selected files
+
+  // Upload all images in parallel
+  const uploadedImages = await Promise.all(
+    files.map(async (file) => {
+      const uploadImageCloudinary = await uploadImage(file);
+      return uploadImageCloudinary.url; // return URL
+    })
+  );
+
+  // Add them to existing state
+  setData((prev) => ({
+    ...prev,
+    productImage: [...prev.productImage, ...uploadedImages],
+  }));
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -154,6 +162,7 @@ const UploadProduct = ({ onClose, fetchdata }) => {
                   type="file"
                   id="uploadImageInput"
                   className="hidden"
+                  multiple
                   onChange={handleUploadProduct}
                 />
               </div>
