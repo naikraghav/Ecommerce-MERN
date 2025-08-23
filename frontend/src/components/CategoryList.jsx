@@ -1,12 +1,13 @@
-import  { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SummaryApi from "../common";
 import { Link } from "react-router-dom";
+
 
 const CategoryList = () => {
   const [categoryProduct, setCategoryProduct] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const categoryLoading = new Array(13).fill(null);
+  const categoryLoading = new Array(15).fill(null);
 
   const fetchCategoryProduct = async () => {
     setLoading(true);

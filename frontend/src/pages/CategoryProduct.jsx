@@ -11,16 +11,16 @@ const CategoryProduct = () => {
   const location = useLocation();
   const urlSearch = new URLSearchParams(location.search);
   const urlCategoryListinArray = urlSearch.getAll("category");
+  const [sortBy, setSortBy] = useState("");
+  const [filterCategoryList, setFilterCategoryList] = useState([]);
+  const [selectCategory, setSelectCategory] = useState(urlCategoryListObject);
 
   const urlCategoryListObject = {};
   urlCategoryListinArray.forEach((el) => {
     urlCategoryListObject[el] = true;
   });
 
-  const [selectCategory, setSelectCategory] = useState(urlCategoryListObject);
-  const [filterCategoryList, setFilterCategoryList] = useState([]);
 
-  const [sortBy, setSortBy] = useState("");
 
   const fetchData = async () => {
     const response = await fetch(SummaryApi.filterProduct.url, {

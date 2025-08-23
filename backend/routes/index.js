@@ -2,16 +2,17 @@ const express = require('express');
 const router = express.Router();
 
 // Define your routes here
-const userSignUpController = require("../controller/userSignUp.js");
-const userSignInController = require('../controller/userSignin.js');
-const userDetailsController = require('../controller/userDetails.js');
+const userSignUpController = require("../controller/user/userSignUp.js");
+const userSignInController = require('../controller/user/userSignin.js');
+const userDetailsController = require('../controller/user/userDetails.js');
 const authToken = require('../middleware/authToken.js');
-const userLogout = require('../controller/userLogout.js');
-const allUsers = require('../controller/allUsers.js');
-const updateUser = require('../controller/updateUser.js');
-const uploadProductController = require('../controller/uploadProduct.js');
-const getProductController = require('../controller/getProduct.js');
-const updateProductController = require('../controller/updateProduct.js');
+const userLogout = require('../controller/user/userLogout.js');
+const allUsers = require('../controller/user/allUsers.js');
+const updateUser = require('../controller/user/updateUser.js');
+const uploadProductController = require('../controller/product/uploadProduct.js');
+const getProductController = require('../controller/product/getProduct.js');
+const updateProductController = require('../controller/product/updateProduct.js');
+const getCategoryProduct = require('../controller/product/getCategoryProduct.js');
 
 router.post('/signup', userSignUpController); 
 router.post('/signin', userSignInController);
@@ -26,5 +27,6 @@ router.post('/update-user', authToken, updateUser);
 router.post('/upload-product', authToken, uploadProductController);
 router.get('/get-product',  getProductController);
 router.post('/update-product', authToken, updateProductController);
+router.get("/get-categoryProduct", getCategoryProduct);
 
 module.exports = router;

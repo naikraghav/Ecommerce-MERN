@@ -1,12 +1,12 @@
-import CategoryList from '../components/CategoryList';
-
+import CategoryList from "../components/CategoryList";
 
 const Home = () => {
+
   return (
     <div>
       <CategoryList />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

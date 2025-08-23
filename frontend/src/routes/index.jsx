@@ -7,6 +7,7 @@ import SignUp from '../pages/SignUp.jsx';
 import AdminPanel from '../pages/AdminPanel.jsx';
 import AllUsers from '../pages/AllUsers.jsx';
 import AllProducts from '../pages/AllProducts.jsx';
+import CategoryProducts from '../pages/CategoryProduct.jsx';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "home",
+        path: "",
         element: <Home />,
       },
       {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "sign-up",
         element: <SignUp />,
+      },
+      {
+        path: "product-category/:categoryName",
+        element: <CategoryProducts />,
       },
       {
         path: "admin-panel",
