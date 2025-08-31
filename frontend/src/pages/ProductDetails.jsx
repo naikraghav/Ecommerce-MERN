@@ -4,8 +4,8 @@ import SummaryApi from "../common";
 import { FaStar } from "react-icons/fa";
 import { FaStarHalf } from "react-icons/fa";
 import displayINRCurrency from "../helper/displayCurrency";
-import VerticalCardProduct from "../components/VerticalCardProduct";
-// import CategroyWiseProductDisplay from "../components/CategoryWiseProductDisplay";
+// import VerticalCardProduct from "../components/VerticalCardProduct";
+import CategoryWiseProductDisplay from "../components/CategoryWiseProductDisplay";
 import addToCart from "../helper/addToCart";
 import Context from "../context";
 
@@ -243,7 +243,12 @@ const ProductDetails = () => {
         )}
       </div>
 
-      
+      {data.category && (
+        <CategoryWiseProductDisplay
+          category={data?.category}
+          heading={"Recommended Product"}
+        />
+      )}
     </div>
   );
 };
