@@ -9,12 +9,15 @@ import SummaryApi from "../common";
 import { setUserDetails } from "../store/userSlice";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { useContext } from "react";
+import Context from "../context";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
 
   const dispatch = useDispatch();
   const [menuDisplay, setMenuDisplay] = useState(false);
+  const context = useContext(Context);
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -85,14 +88,16 @@ const Header = () => {
             )}
           </div>
 
-          <div className="text-2xl cursor-pointer relative">
-            <span>
-              <FaShoppingCart />
-            </span>
-            <div className="bg-red-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3">
-              <p className="text-sm">0</p>
+          {user?._id && (
+            <div className="text-2xl cursor-pointer relative">
+              <span>
+                <FaShoppingCart />
+              </span>
+              <div className="bg-red-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3">
+                <p className="text-sm">{context.cartProductCount}</p>
+              </div>
             </div>
-          </div>
+          )}
 
           <div>
             {user?._id ? (
