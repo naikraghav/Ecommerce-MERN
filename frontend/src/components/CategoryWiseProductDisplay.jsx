@@ -4,7 +4,7 @@ import displayINRCurrency from "../helper/displayCurrency";
 import { Link } from "react-router-dom";
 import addToCart from "../helper/addToCart";
 import Context from "../context";
-
+import scrollToTop from "../helper/scrollTop";
 
 const CategoryWiseProductDisplay = ({ category, heading }) => {
   const [data, setData] = useState([]);
@@ -22,7 +22,6 @@ const CategoryWiseProductDisplay = ({ category, heading }) => {
     const categoryProduct = await fetchCategoryWiseProduct(category);
     setLoading(false);
 
-   
     setData(categoryProduct?.data);
   };
 
@@ -36,7 +35,7 @@ const CategoryWiseProductDisplay = ({ category, heading }) => {
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,320px))] justify-between md:gap-6 overflow-x-scroll scrollbar-none transition-all">
         {loading
-          ? loadingList.map((product, index) => {
+          ? loadingList.map(() => {
               return (
                 <div className="w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow ">
                   <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center animate-pulse"></div>
@@ -52,12 +51,12 @@ const CategoryWiseProductDisplay = ({ category, heading }) => {
                 </div>
               );
             })
-          : data.map((product, index) => {
+          : data.map((product) => {
               return (
                 <Link
                   to={"/product/" + product?._id}
                   className="w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow "
-                  onClick={null}
+                  onClick={scrollToTop}
                 >
                   <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center">
                     <img

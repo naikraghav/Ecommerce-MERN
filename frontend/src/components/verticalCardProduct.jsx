@@ -11,7 +11,6 @@ const VerticalCardProduct = ({ category, heading }) => {
   const [loading, setLoading] = useState(true)
   const loadingList = new Array(13).fill(null)
 
-  const [scroll, setScroll] = useState(0)
   const scrollElement = useRef()
 
   const { fetchUserAddToCart } = useContext(Context)
@@ -55,7 +54,7 @@ const VerticalCardProduct = ({ category, heading }) => {
         {
 
           loading ? (
-            loadingList.map((product, index) => {
+            loadingList.map(() => {
               return (
                 <div className='w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow '>
                   <div className='bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center animate-pulse'>
@@ -73,7 +72,7 @@ const VerticalCardProduct = ({ category, heading }) => {
               )
             })
           ) : (
-            data.map((product, index) => {
+            data.map((product) => {
               return (
                 <Link to={"product/" + product?._id} className='w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow '>
                   <div className='bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[145px] flex justify-center items-center'>

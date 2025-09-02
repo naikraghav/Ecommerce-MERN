@@ -2,7 +2,7 @@ import Logo from "./Logo";
 import { HiSearch } from "react-icons/hi";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import SummaryApi from "../common";
@@ -18,6 +18,9 @@ const Header = () => {
   const dispatch = useDispatch();
   const [menuDisplay, setMenuDisplay] = useState(false);
   const context = useContext(Context);
+  const navigate = useNavigate();
+  const searchInput = useLocation()
+  const [search, setSearch] = useState("");
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -28,10 +31,21 @@ const Header = () => {
     if (data.success) {
       toast.success(data.message);
       dispatch(setUserDetails(null));
+      navigate("/");
     } else {
       toast.error(data.message || "Logout failed");
     }
   };
+
+  const handleSearch = (e) => {
+    const {value} = e.target
+    setSearch(value)
+    if(value){
+      navigate(`/search?q=${value}`)
+    }else{
+      navigate(`/search`)
+    }
+  }
 
   return (
     <header className="h-16 shadow-md bg-white fixed z-40 w-full">
@@ -47,6 +61,8 @@ const Header = () => {
             type="text"
             placeholder="Search product here..."
             className="w-full outline-none "
+            onChange={handleSearch}
+            value={search}
           />
           <div className="text-lg min-w-[50px] h-8 bg-red-600 flex items-center justify-center text-white rounded-r-full">
             <HiSearch />
