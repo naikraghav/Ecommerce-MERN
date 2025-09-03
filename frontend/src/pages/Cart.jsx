@@ -3,6 +3,7 @@ import SummaryApi from "../common";
 import Context from "../context";
 import displayINRCurrency from "../helper/displayCurrency";
 import { MdDelete } from "react-icons/md";
+import { loadStripe } from "@stripe/stripe-js";
 
 const Cart = () => {
   const [data, setData] = useState([]);
@@ -20,7 +21,6 @@ const Cart = () => {
     });
 
     const responseData = await response.json();
-    console.log(responseData);
 
     if (responseData.success) {
       setData(responseData.data);
@@ -98,6 +98,31 @@ const Cart = () => {
       context.fetchUserAddToCart();
     }
   };
+
+  const handlePayment = async () => {
+    const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+    const response = await fetch(SummaryApi.payment.url, {
+      method: SummaryApi.payment.method,
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+              cartItems:data
+      }),
+    });
+
+    const responseData = await response.json();
+
+  const stripe = await stripePromise; // ✅ wait for stripe object
+
+  const result = await stripe.redirectToCheckout({
+    sessionId: responseData.id, // backend must return { id: session.id }
+  });
+    if (result.error) {
+    console.error(result.error.message);
+  }
+};
 
   const totalQty = data.reduce(
     (previousValue, currentValue) => previousValue + currentValue.quantity,
@@ -192,30 +217,38 @@ const Cart = () => {
         </div>
 
         {/***summary  */}
-        <div className="mt-5 lg:mt-0 w-full max-w-sm">
-          {loading ? (
-            <div className="h-36 bg-slate-200 border border-slate-300 animate-pulse"></div>
-          ) : (
-            <div className="h-36 bg-white">
-              <h2 className="text-white bg-red-600 px-4 py-1">Summary</h2>
-              <div className="flex items-center justify-between px-4 gap-2 font-medium text-lg text-slate-600">
-                <p>Quantity</p>
-                <p>{totalQty}</p>
-              </div>
+        {
+          data[0]&&(
 
-              <div className="flex items-center justify-between px-4 gap-2 font-medium text-lg text-slate-600">
-                <p>Total Price</p>
-                <p>{displayINRCurrency(totalPrice)}</p>
-              </div>
+            <div className="mt-5 lg:mt-0 w-full max-w-sm">
+        
+            
+              {loading ? (
+                <div className="h-36 bg-slate-200 border border-slate-300 animate-pulse"></div>
+              ) : (
+                <div className="h-36 bg-white">
+                  <h2 className="text-white bg-red-600 px-4 py-1">Summary</h2>
+                  <div className="flex items-center justify-between px-4 gap-2 font-medium text-lg text-slate-600">
+                    <p>Quantity</p>
+                    <p>{totalQty}</p>
+                  </div>
 
-              <button className="bg-blue-600 p-2 text-white w-full mt-2">
-                Payment
-              </button>
-            </div>
-          )}
-        </div>
+                  <div className="flex items-center justify-between px-4 gap-2 font-medium text-lg text-slate-600">
+                    <p>Total Price</p>
+                    <p>{displayINRCurrency(totalPrice)}</p>
+                  </div>
+
+                  <button className="bg-blue-600 p-2 text-white w-full mt-2" onClick={handlePayment}>
+                    Payment
+                  </button>
+                </div>
+              )}
+            </div>  
+          )
+        }
       </div>
     </div>
+    
   );
 };
 
