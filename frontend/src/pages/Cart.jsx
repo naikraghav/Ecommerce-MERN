@@ -1,9 +1,11 @@
-import  { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SummaryApi from "../common";
 import Context from "../context";
 import displayINRCurrency from "../helper/displayCurrency";
 import { MdDelete } from "react-icons/md";
 import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const Cart = () => {
   const [data, setData] = useState([]);
@@ -100,7 +102,6 @@ const Cart = () => {
   };
 
   const handlePayment = async () => {
-    const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
     const response = await fetch(SummaryApi.payment.url, {
       method: SummaryApi.payment.method,
       credentials: "include",
